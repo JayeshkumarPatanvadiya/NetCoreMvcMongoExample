@@ -1,0 +1,2 @@
+# NetCoreMvcMongoExample
+NetCoreMvcMongoExample
