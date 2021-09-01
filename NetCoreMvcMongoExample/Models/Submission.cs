@@ -19,8 +19,17 @@ namespace NetCoreMvcMongoExample.Models
 
         public string UserId { get; set; }
 
-        [Display(Name = "FirstName")]
+        [Display(Name = "First Name")]
         public string UserName { get; set; }
+
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Display(Name = "Phone Number")]
+        public string Phone { get; set; }
 
         [Display(Name = "Description")]
         public string Content { get; set; }
