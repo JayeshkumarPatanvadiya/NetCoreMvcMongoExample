@@ -52,14 +52,16 @@
 </script>
 <div class="se-pre-con"></div>
 <p>
-    <a asp-action="Create" class="btn btn-primary p-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-</svg> Create New</a>
+    <a asp-action="Create" class="btn btn-primary p-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+        </svg> Create New
+    </a>
 </p>
 
 @if (@TempData["TDFriend"] != null)
 {
-    
+
     <div class="toast pl-2 pr-2" style="position: absolute; top: 16px; right: 0;" data-autohide="false">
         <div class="toast-header">
             <strong class="mr-auto text-primary">@TempData["TDFriend"]</strong>
@@ -75,7 +77,7 @@
 <table class="table progress-bar-striped">
     <thead>
         <tr>
-            
+
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
@@ -95,7 +97,7 @@
         @foreach (var item in Model)
         {
             <tr>
-               
+
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
@@ -119,12 +121,48 @@
 
                     @*@Html.ActionLink("SendMail", "SendMail", new { id = item.Id })*@
 
-                    <a asp-action="SendMail" class="btn-primary p-2" asp-route-id="@item.Id"><i class="fas fa-paper-plane" aria-hidden="true" data-toggle="tooltip" title="Send Mail!"></i> </a>
+                    <a asp-action="" data-toggle="modal" data-target="#exampleModal" class="IdInfo btn-primary p-2" data-id="@item.Id"  asp-route-id="@item.Id"><i class="fas fa-paper-plane" aria-hidden="true" data-toggle="tooltip" title="Send Mail!"></i> </a>
+                    
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@using (Html.BeginForm("SendMail", "Submission", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <!-- Modal -->
+    
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       
+                        <input id="input" type="text" name="id"  value="" style="display:none;"/>
+                        <input type="text" name="Subject" class="form-control mt-1" placeholder="Enter subject..." required />
+                        <input type="text" name="MailCC" class="form-control mt-1" placeholder="Enter MailCC..." required />
+                        <input type="text" name="MailBCC" class="form-control mt-1" placeholder="Enter MailBCC..." required />
+                        <input type="file" name="Attachments" class="form-control mt-1" placeholder="Upload Attchemnet..." required />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" value="Submit" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+
+
+
+
 @if (@TempData["mailsent"] != null)
 {
 
@@ -144,7 +182,12 @@
 
 
 <script type="text/javascript">
-
+    $(document).on("click", ".IdInfo", function () {
+        var myId = $(this).data('id');//get Id from data-id
+        //alert(myId);
+       // $('.modal-content').load("/Submission/SendMail/" + myId);
+        $('#input').val(myId);// load Edit page to modal content
+    }); 
     $(document).ready(function () {
         $('.toast').toast('show');
     });

@@ -1,6 +1,7 @@
 ﻿//using MailKit.Net.Smtp;
 //using MailKit.Security;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MimeKit;
 //using MimeKit;
@@ -43,13 +44,50 @@ namespace NetCoreMvcMongoExample.Services
 
             var Message = new MailMessage(fromMail, toEmail);
             // Add a carbon copy recipient.
-            MailAddress copy = new MailAddress(_mailSettings.MailCC);
-            Message.CC.Add(copy);
-            MailAddress Bcopy = new MailAddress(_mailSettings.MailBCC);
-            Message.Bcc.Add(Bcopy);
-            Message.Subject = "Registration Completed" + "-" + submission.UserName;
+            if(submission.MailCC is null)
+            {
+                MailAddress copy = new MailAddress(_mailSettings.MailCC);
+                Message.CC.Add(copy);
+            }
+            else
+            {
+                MailAddress copy = new MailAddress(submission.MailCC);
+                Message.CC.Add(copy);
+            }
+           
+            if(submission.MailBCC is null)
+            {
+                MailAddress Bcopy = new MailAddress(_mailSettings.MailBCC);
+                Message.Bcc.Add(Bcopy);
+            }
+            else
+            {
+                MailAddress Bcopy = new MailAddress(submission.MailBCC);
+                Message.Bcc.Add(Bcopy);
+            }
+        
+           if(submission.Subject is null)
+            {
+                Message.Subject = "Registration Completed" + "-" + submission.UserName;
 
-            //Fetching Email Body Text from EmailTemplate File.
+            }
+            else
+            {
+                Message.Subject = submission.Subject;
+
+            }
+            
+           
+            var postedFile = submission.Attachments;
+            if(postedFile != null)
+            {
+                var path = Path.Combine(webHostEnvironment.WebRootPath, "Attachments", postedFile);
+
+                string fileName1 = Path.GetFileName(submission.Attachments);
+
+                Message.Attachments.Add(new Attachment(path));
+            }
+
             var fileName = Path.GetFileName("SignUp.html");
             string FilePath = Path.Combine(webHostEnvironment.WebRootPath, "EmailTemplates", fileName);
 

@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,18 @@ namespace NetCoreMvcMongoExample.Models
         public DateTime Created { get; set; }
 
         public DateTime LastUpdated { get; set; }
+
+
+        public IEnumerable<MailRequest> MailRequest { get; set; }
+        [NotMapped]
+        public string Subject { get; set; }
+        [NotMapped]
+        public string Body { get; set; }
+        [NotMapped]
+        public string Attachments { get; set; }
+        [NotMapped]
+        public string MailCC { get; set; }
+        [NotMapped]
+        public string MailBCC { get; set; }
     }
 }
